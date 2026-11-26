@@ -4,9 +4,9 @@ public class Veterinario {
 	private String nome;
 	private String Cpf;
 	private String especialidade;
-	private double telefone;
+	private String telefone;
 	
-	public Veterinario(String Pnome, String PCpf, String Pespecialidade, double Ptelefone ) {
+	public Veterinario(String Pnome, String PCpf, String Pespecialidade, String Ptelefone ) {
 		this.nome = Pnome;
 		this.Cpf = PCpf;
 		this.especialidade = Pespecialidade;
@@ -37,11 +37,11 @@ public class Veterinario {
 		this.especialidade = especialidade;
 	}
 
-	public double getTelefone() {
+	public String getTelefone() {
 		return telefone;
 	}
 
-	public void setTelefone(double telefone) {
+	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
 	
