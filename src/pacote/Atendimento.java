@@ -1,115 +1,97 @@
 package pacote;
 
-public class Atendimento {
-	private Sala sala;
-	private Procedimento procedimento;
-	private String Codigo_Atendimento;
-	private String nome_animal;
-	private String especie;
-	private String nome_Tutor;
-	private String data;
-	private String horario;
-	private String status;
-	private String observacoes;
+import java.util.ArrayList;
+import java.util.List;
 
-	public Atendimento(Sala sala, Procedimento procedimento, String codigo_Atendimento, String nome_animal, String especie, String nome_Tutor, String data, String horario, String status, String observacoes) {
-		this.sala = sala;
-		this.procedimento = procedimento;
-		this.Codigo_Atendimento = codigo_Atendimento;
-		this.nome_animal = nome_animal;
-		this.especie = especie;
-		this.nome_Tutor = nome_Tutor;
-		this.data = data;
-		this.horario = horario;
-		this.status = status;
-		this.observacoes = observacoes;
+public class Sala {
+	private Veterinario veterinario;
+	private int numero;
+	private String bloco;
+	private int capacidade;
+	private String tipo_sala;
+	private List<Atendimento> atendimentos = new ArrayList<>();
+
+	public Sala(Veterinario Pveterinario, int numero, String bloco, int capacidade, String tipo_sala) {
+		this.veterinario = Pveterinario;
+		this.numero = numero;
+		this.bloco = bloco;
+		this.capacidade = capacidade;
+		this.tipo_sala = tipo_sala;
 	}
 
-	public String getCodigo_Atendimento() {
-		return Codigo_Atendimento;
+	public int getNumero() {
+		return numero;
 	}
 
-	public void setCodigo_Atendimento(String codigo_Atendimento) {
-		Codigo_Atendimento = codigo_Atendimento;
+	public void setNumero(int numero) {
+		this.numero = numero;
 	}
 
-	public String getNome_animal() {
-		return nome_animal;
+	public String getBloco() {
+		return bloco;
 	}
 
-	public void setNome_animal(String nome_animal) {
-		this.nome_animal = nome_animal;
+	public void setBloco(String bloco) {
+		this.bloco = bloco;
 	}
 
-	public String getEspecie() {
-		return especie;
+	public int getCapacidade() {
+		return capacidade;
 	}
 
-	public void setEspecie(String especie) {
-		this.especie = especie;
+	public void setCapacidade(int capacidade) {
+		this.capacidade = capacidade;
 	}
 
-	public String getNome_Tutor() {
-		return nome_Tutor;
+	public String getTipo_sala() {
+		return tipo_sala;
 	}
 
-	public void setNome_Tutor(String nome_Tutor) {
-		this.nome_Tutor = nome_Tutor;
+	public void setTipo_sala(String tipo_sala) {
+		this.tipo_sala = tipo_sala;
 	}
 
-	public String getData() {
-		return data;
+	public Veterinario getVeterinario() {
+		return veterinario;
 	}
 
-	public void setData(String data) {
-		this.data = data;
+	public List<Atendimento> getAtendimentos() {
+		return atendimentos;
 	}
 
-	public String getHorario() {
-		return horario;
+	// Atendimentos que ainda ocupam a sala (não finalizados)
+	public int contarEmAndamento() {
+		int cont = 0;
+		for (Atendimento a : atendimentos) {
+			if (!a.isFinalizado()) {
+				cont++;
+			}
+		}
+		return cont;
 	}
 
-	public void setHorario(String horario) {
-		this.horario = horario;
+	public int contarFinalizados() {
+		int cont = 0;
+		for (Atendimento a : atendimentos) {
+			if (a.isFinalizado()) {
+				cont++;
+			}
+		}
+		return cont;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getObservacoes() {
-		return observacoes;
-	}
-
-	public void setObservacoes(String observacoes) {
-		this.observacoes = observacoes;
-	}
-
-	public Sala getSala() {
-		return sala;
-	}
-
-	public Procedimento getProcedimento() {
-		return procedimento;
-	}
-
-	// Compara o CONTEÚDO da string (equals), não a referência (==)
-	public boolean isFinalizado() {
-		return status.equalsIgnoreCase("finalizado");
-	}
-
-	@Override
-	public String toString() {
-		return "Atendimento " + Codigo_Atendimento + " | Animal: " + nome_animal + " (" + especie + ")"
-				+ " | Tutor: " + nome_Tutor + " | " + data + " " + horario
-				+ " | Status: " + status
-				+ "\n    Veterinário: " + sala.getVeterinario().getNome()
-				+ " | Sala: " + sala.getNumero()
-				+ " | Procedimento: " + procedimento.getNome()
-				+ "\n    Obs: " + observacoes;
+	// Valida capacidade e compatibilidade antes de adicionar
+	public boolean adicionarAtendimento(Atendimento a) {
+		if (!tipo_sala.equalsIgnoreCase(a.getProcedimento().getTipoSalaExigido())) {
+			System.out.println("Procedimento incompatível: exige sala do tipo "
+					+ a.getProcedimento().getTipoSalaExigido() + ".");
+			return false;
+		}
+		if (contarEmAndamento() >= capacidade) {
+			System.out.println("Sala lotada (capacidade: " + capacidade + ").");
+			return false;
+		}
+		atendimentos.add(a);
+		return true;
 	}
 }
